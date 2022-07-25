@@ -1,44 +1,26 @@
 const assert = require('assert');
 const ganache = require('ganache');
 const Web3 = require('web3');
+const { abi, evm } = require('../compile');
 
 const web3 = new Web3(ganache.provider());
 
-//Estudos iniciais sobre o Mocha e sua estrutura.
+let accounts;
+let inbox;
 
-class Carro {
-     estacionar() {
-        return 'Carro estacionado!';
-     }
+beforeEach(async () => {
+   accounts = await web3.eth.getAccounts();
 
-     dirigir() {
-        return 'vrum vrum';
-     }
-}
-
-let carro;
-
-beforeEach(() => {
-   carro = new Carro();
+   inbox = await new web3.eth.Contract(abi)
+      .deploy({
+         data: evm.bytecode.object,
+         arguments: ['olá, Criptomundo!'],
+      })
+      .send({ from: accounts[0], gas: '1000000' })
 });
 
-describe('Teste Carro para SUCESSO', () => {
-    it('Carro pode ser estacionado', () => {
-        assert.equal(carro.estacionar(), 'Carro estacionado!');
-    });
-
-    it('Carro pode ser dirigido', () => {
-      assert.equal(carro.dirigir(), 'vrum vrum');
-   });
-   
-})
-
-describe('Teste Carro para FALHA', () => {
-   it('Carro não pode ser estacionado', () => {
-      assert.equal(carro.estacionar(), 'Carro não está estacionado!');
-    })
-
-   it('Carro não pode ser dirigido', () => {
-      assert.equal(carro.dirigir(), 'poof');
+describe('Inbox', () => {
+   it('deploys a contract', () => {
+      console.log(inbox);
    })
 })

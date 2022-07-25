@@ -21,9 +21,6 @@ var input = {
     }
 };
 
-var output = JSON.parse(solc.compile(JSON.stringify(input)));
-
-exports.abi = output.contracts['Inbox.sol']['Inbox'].abi;
-exports.bytecode = output.contracts['Inbox.sol']['Inbox'].evm.bytecode.object;
-
-console.log(this.abi);
+module.exports = JSON.parse(solc.compile(JSON.stringify(input))).contracts[
+    'Inbox.sol'
+  ].Inbox;
